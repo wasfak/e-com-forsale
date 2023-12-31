@@ -20,12 +20,12 @@ export default function Navbar() {
   if (!mounted) {
     return "";
   }
-  console.log(totalCart);
+
   return (
     <header
-      className={`w-full flex items-center p-2 justify-between bg-[#4adede] font-bold text-slate-900 font-sasa`}
+      className={`w-full flex items-center p-2 justify-between bg-[#6495ED] font-bold text-slate-900 font-sriracha`}
     >
-      <Link href="/">
+      <Link href="/" as={"image"}>
         <Image
           src={logo}
           alt="logo"
@@ -37,9 +37,7 @@ export default function Navbar() {
       </Link>
 
       <div className="flex items-center justify-between gap-x-6">
-        <Link href="/" className="font-sasa">
-          Home
-        </Link>
+        <Link href="/">Home</Link>
         <Link href="/Products">Products</Link>
         <Link href="/UploadPage">Upload product</Link>
       </div>

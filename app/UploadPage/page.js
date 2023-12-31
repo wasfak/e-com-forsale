@@ -3,6 +3,8 @@ import { useState } from "react";
 import { CldUploadWidget } from "next-cloudinary";
 import Image from "next/image";
 import toast from "react-hot-toast";
+import { z } from "zod";
+
 function UploadPic({ onImageUpload }) {
   const [url, setUrl] = useState("");
 
@@ -19,7 +21,7 @@ function UploadPic({ onImageUpload }) {
         {url && (
           <Image
             className="object-cover"
-            alt="Image"
+            alt="Uploaded image"
             src={url}
             width={200}
             height={200}
@@ -50,17 +52,43 @@ export default function UploadPage() {
     price: "",
     isOnSale: false,
     imageUrl: "",
-    discountType: "", // Add these properties
+    discountType: "",
     discountPercentage: null,
     discountAmount: null,
   });
 
-  const resetImage = () => {
-    setProductData((prevData) => ({
-      ...prevData,
-      imageUrl: "", // Reset imageUrl to empty string
-    }));
-  };
+  const productSchema = z.object({
+    name: z
+      .string()
+      .min(1, { message: "Please enter a product name." })
+      .max(200, {
+        message: "Product name is too long. Maximum 200 characters.",
+      }),
+    details: z
+      .string()
+      .min(1, { message: "Please provide some details about the product." })
+      .max(500, { message: "Details are too long. Maximum 500 characters." }),
+    price: z.string().min(0, { message: "Price must be a positive number." }),
+    isOnSale: z.boolean(),
+    imageUrl: z
+      .string()
+      .url({ message: "Please provide a valid image URL." })
+      .nonempty({ message: "Please upload an image for the product." }),
+    discountType: z
+      .union([z.literal("percentage"), z.literal("fixed")])
+      .nullable() // can be null
+      .optional(), // can be omitted
+    discountPercentage: z
+      .string()
+      .min(1, { message: "Discount percentage should be greater than 0." }) // Adjust as needed
+      .nullable() // can be null
+      .optional(), // can be omitted
+    discountAmount: z
+      .string()
+      .min(1, { message: "Discount amount must be a positive number." }) // Adjust as needed
+      .nullable() // can be null
+      .optional(), // can be omitted
+  });
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -81,12 +109,35 @@ export default function UploadPage() {
     e.preventDefault();
     setLoading(true);
 
+    // Pre-validation check: Ensure an image has been uploaded
+    if (!productData.imageUrl) {
+      toast.error("Please upload an image for the product.");
+      setLoading(false);
+      return;
+    }
+
+    const preparedData = {
+      ...productData,
+      // Add any necessary transformations here if needed
+    };
+
+    // Validate the prepared data
+    const validation = productSchema.safeParse(preparedData);
+
+    if (!validation.success) {
+      // If validation fails, show the first error and prevent submission
+      const firstError = validation.error.issues[0];
+      toast.error(firstError.message);
+      setLoading(false);
+      return;
+    }
+
     try {
-      // Construct the request body
+      // Construct the request body using the validated and prepared data
       const requestBody = {
-        ...productData,
+        ...validation.data,
       };
-      console.log(requestBody);
+
       // Make the fetch request
       const response = await fetch("/api/products", {
         method: "POST",
@@ -100,10 +151,10 @@ export default function UploadPage() {
       if (data.status === 200) {
         toast.success("Product added successfully");
       } else {
-        console.error("Failed to add product");
+        toast.error("Failed to add product");
       }
     } catch (error) {
-      toast.error(error);
+      toast.error("An error occurred while adding the product");
     } finally {
       setProductData({
         name: "",
@@ -111,11 +162,10 @@ export default function UploadPage() {
         price: "",
         isOnSale: false,
         imageUrl: "",
-        discountType: "", // Add these properties
+        discountType: "",
         discountPercentage: null,
         discountAmount: null,
       });
-
       setLoading(false);
     }
   };

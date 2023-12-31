@@ -4,52 +4,67 @@ import ItemModel from "@/models/itemSchema";
 import { auth } from "@clerk/nextjs";
 import mongoose from "mongoose";
 import { Inter } from "next/font/google";
+
 const inter = Inter({ subsets: ["latin"] });
 
-export const revalidate = 1;
 export default async function ProductsPage() {
-  const { userId } = auth();
+  let plainData = [];
+  let error = null;
 
-  await db.connectDb();
-  const data = await ItemModel.find({ userId }).lean();
-  const plainData = data.map((doc) => {
-    // Start with an empty object
-    const plainObject = {};
+  try {
+    const { userId } = auth();
 
-    // Iterate over all keys in the document
-    Object.keys(doc).forEach((key) => {
-      const value = doc[key];
+    if (!userId) {
+      throw new Error("User not authenticated");
+    }
 
-      // Check for ObjectId (common in _id)
-      if (key === "_id" || value instanceof mongoose.Types.ObjectId) {
-        plainObject[key] = value.toString();
-      }
-      // Check for Dates and convert them to ISO strings
-      else if (value instanceof Date) {
-        plainObject[key] = value.toISOString();
-      }
-      // Add any other special type conversions you might need here
+    await db.connectDb();
+    const data = await ItemModel.find({ userId }).lean();
 
-      // If it's none of the above, add it as is
-      else {
-        plainObject[key] = value;
-      }
+    plainData = data.map((doc) => {
+      const plainObject = {};
+
+      Object.keys(doc).forEach((key) => {
+        const value = doc[key];
+
+        if (key === "_id" || value instanceof mongoose.Types.ObjectId) {
+          plainObject[key] = value.toString();
+        } else if (value instanceof Date) {
+          plainObject[key] = value.toISOString();
+        } else {
+          plainObject[key] = value;
+        }
+      });
+
+      return plainObject;
     });
+  } catch (err) {
+    console.error("Failed to fetch products:", err);
+    error = err.message || "Failed to load products.";
+  } finally {
+    await db.disconnectDb();
+  }
 
-    return plainObject;
-  });
-  await db.disconnectDb();
+  if (error) {
+    return <div className="text-center py-10">{error}</div>;
+  }
+
+  if (plainData.length === 0) {
+    return (
+      <div className="text-center py-10">
+        No items. Please add items from the upload page.
+      </div>
+    );
+  }
+
   return (
-    <div className="">
-      {plainData.length == 0 ? (
-        <h1>no items please add items from upload page</h1>
-      ) : (
-        <div className={`${inter.className} grid grid-cols-3 gap-4 p-4`}>
-          {plainData.map((item) => (
-            <Items key={item._id} item={item} />
-          ))}
-        </div>
-      )}
+    <div className={`container mx-auto py-8 ${inter.className}`}>
+      <h1 className="text-2xl font-bold mb-2 text-center">Products</h1>
+      <div className="grid grid-cols-3 gap-4 p-4 bg-[##fbf7f5]">
+        {plainData.map((item, index) => (
+          <Items key={item._id} item={item} index={index} />
+        ))}
+      </div>
     </div>
   );
 }
