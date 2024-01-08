@@ -51,11 +51,10 @@ export default function UploadPage() {
     price: "",
     isOnSale: false,
     imageUrl: "",
-    discountType: "null",
-    discountPercentage: "null",
-    discountAmount: "null",
+    discountType: "",
+    discountPercentage: "",
+    discountAmount: "",
   });
-
   const productSchema = z
     .object({
       name: z
@@ -72,11 +71,27 @@ export default function UploadPage() {
         .string()
         .url("Please provide a valid image URL.")
         .nonempty("Please upload an image for the product."),
-      /*      discountType: z
-        .union([z.literal("percentage"), z.literal("fixed")])
-        .optional(),
-      discountPercentage: z.string().optional(),
-      discountAmount: z.string().optional(), */
+      discountType: z.enum(["percentage", "fixed"]).optional(),
+      discountPercentage: z.string().refine((value, context) => {
+        if (!context || !context.data) return true; // Handle undefined context
+        if (context.data.isOnSale && !context.data.discountType) {
+          return "Please select a discount type.";
+        }
+        if (context.data.discountType === "percentage" && !value) {
+          return "Please enter a percentage value.";
+        }
+        return true;
+      }),
+      discountAmount: z.string().refine((value, context) => {
+        if (!context || !context.data) return true; // Handle undefined context
+        if (context.data.isOnSale && !context.data.discountType) {
+          return "Please select a discount type.";
+        }
+        if (context.data.discountType === "fixed" && !value) {
+          return "Please enter a fixed amount value.";
+        }
+        return true;
+      }),
     })
     .refine(
       (data) => {

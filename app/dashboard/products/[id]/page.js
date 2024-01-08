@@ -95,7 +95,7 @@ export default function ModifyItemPage() {
     return "";
   }
   return (
-    <div className="max-w-2xl mx-auto mt-8 p-8 bg-white rounded shadow-2xl">
+    <div className="p-2 m-2">
       <h1 className="text-3xl font-semibold mb-6">Modify Product</h1>
       <form className="space-y-4">
         <div className="flex flex-col mb-4">
@@ -194,6 +194,13 @@ export default function ModifyItemPage() {
             </div>
           </div>
         )}
+        <Image
+          className="object-cover"
+          alt="Uploaded image"
+          src={item.imageUrl}
+          width={200}
+          height={200}
+        />
         <UploadPic onImageUpload={handleImageUpload} />
         <div>
           <button
