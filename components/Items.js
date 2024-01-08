@@ -59,7 +59,7 @@ export default function Items({ item, index }) {
           </h5>
         </Link>
         <div className="mt-2 mb-5 flex items-center justify-between">
-          <p>
+          <span>
             {item.discountType !== "none" ? (
               <div>
                 <span className="text-xl font-bold text-slate-900">
@@ -74,7 +74,7 @@ export default function Items({ item, index }) {
                 ${item.price}
               </span>
             )}
-          </p>
+          </span>
         </div>
         <button
           onClick={() => addItem(item)}

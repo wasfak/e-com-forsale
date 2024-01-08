@@ -43,7 +43,6 @@ function UploadPic({ onImageUpload }) {
   );
 }
 
-// UploadPage component
 export default function UploadPage() {
   const [loading, setLoading] = useState(false);
   const [productData, setProductData] = useState({
@@ -52,43 +51,48 @@ export default function UploadPage() {
     price: "",
     isOnSale: false,
     imageUrl: "",
-    discountType: "",
-    discountPercentage: null,
-    discountAmount: null,
+    discountType: "null",
+    discountPercentage: "null",
+    discountAmount: "null",
   });
 
-  const productSchema = z.object({
-    name: z
-      .string()
-      .min(1, { message: "Please enter a product name." })
-      .max(200, {
-        message: "Product name is too long. Maximum 200 characters.",
-      }),
-    details: z
-      .string()
-      .min(1, { message: "Please provide some details about the product." })
-      .max(500, { message: "Details are too long. Maximum 500 characters." }),
-    price: z.string().min(0, { message: "Price must be a positive number." }),
-    isOnSale: z.boolean(),
-    imageUrl: z
-      .string()
-      .url({ message: "Please provide a valid image URL." })
-      .nonempty({ message: "Please upload an image for the product." }),
-    discountType: z
-      .union([z.literal("percentage"), z.literal("fixed")])
-      .nullable() // can be null
-      .optional(), // can be omitted
-    discountPercentage: z
-      .string()
-      .min(1, { message: "Discount percentage should be greater than 0." }) // Adjust as needed
-      .nullable() // can be null
-      .optional(), // can be omitted
-    discountAmount: z
-      .string()
-      .min(1, { message: "Discount amount must be a positive number." }) // Adjust as needed
-      .nullable() // can be null
-      .optional(), // can be omitted
-  });
+  const productSchema = z
+    .object({
+      name: z
+        .string()
+        .min(1, "Please enter a product name.")
+        .max(200, "Product name is too long. Maximum 200 characters."),
+      details: z
+        .string()
+        .min(1, "Please provide some details about the product.")
+        .max(500, "Details are too long. Maximum 500 characters."),
+      price: z.string().min(0, "Price must be a positive number."),
+      isOnSale: z.boolean(),
+      imageUrl: z
+        .string()
+        .url("Please provide a valid image URL.")
+        .nonempty("Please upload an image for the product."),
+      /*      discountType: z
+        .union([z.literal("percentage"), z.literal("fixed")])
+        .optional(),
+      discountPercentage: z.string().optional(),
+      discountAmount: z.string().optional(), */
+    })
+    .refine(
+      (data) => {
+        if (data.isOnSale) {
+          return (
+            data.discountType &&
+            (data.discountPercentage || data.discountAmount)
+          );
+        }
+        return true;
+      },
+      {
+        message: "Please provide discount details for sale items.",
+        path: ["discountType", "discountPercentage", "discountAmount"],
+      }
+    );
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -109,17 +113,19 @@ export default function UploadPage() {
     e.preventDefault();
     setLoading(true);
 
-    // Pre-validation check: Ensure an image has been uploaded
-    if (!productData.imageUrl) {
-      toast.error("Please upload an image for the product.");
-      setLoading(false);
-      return;
-    }
-
-    const preparedData = {
+    let preparedData = {
       ...productData,
-      // Add any necessary transformations here if needed
     };
+
+    // If not on sale, ignore discount fields
+    if (!productData.isOnSale) {
+      preparedData = {
+        ...preparedData,
+        discountType: null,
+        discountPercentage: null,
+        discountAmount: null,
+      };
+    }
 
     // Validate the prepared data
     const validation = productSchema.safeParse(preparedData);
@@ -222,7 +228,6 @@ export default function UploadPage() {
           />
           <label className="text-sm font-medium text-gray-600">On Sale:</label>
         </div>
-
         {productData.isOnSale && (
           <div className="mb-4 ml-6">
             <div className="flex items-center mb-2">
@@ -271,9 +276,7 @@ export default function UploadPage() {
             </div>
           </div>
         )}
-
         <UploadPic onImageUpload={handleImageUpload} />
-
         <div>
           <button
             disabled={loading}

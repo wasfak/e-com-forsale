@@ -23,7 +23,7 @@ export default function Navbar() {
 
   return (
     <header
-      className={`w-full flex items-center p-2 justify-between bg-[#6495ED] font-bold text-slate-900 font-sriracha`}
+      className={`w-full flex items-center p-2 justify-between bg-[#832e29] font-bold text-slate-900 ${inter.className}`}
     >
       <Link href="/" as={"image"}>
         <Image
@@ -40,10 +40,10 @@ export default function Navbar() {
         <Link href="/">Home</Link>
         <Link href="/Products">Products</Link>
         <Link href="/UploadPage">Upload product</Link>
+        <Link href="/dashboard">Dashboard</Link>
       </div>
       <div className="flex items-center justify-between gap-x-4">
         <Link href="/cart">
-          {" "}
           <div className="relative">
             <svg
               xmlns="http://www.w3.org/2000/svg"
