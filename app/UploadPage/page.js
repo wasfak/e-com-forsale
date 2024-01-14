@@ -55,6 +55,7 @@ export default function UploadPage() {
     discountPercentage: "",
     discountAmount: "",
   });
+
   const productSchema = z
     .object({
       name: z
@@ -71,27 +72,9 @@ export default function UploadPage() {
         .string()
         .url("Please provide a valid image URL.")
         .nonempty("Please upload an image for the product."),
-      discountType: z.enum(["percentage", "fixed"]).optional(),
-      discountPercentage: z.string().refine((value, context) => {
-        if (!context || !context.data) return true; // Handle undefined context
-        if (context.data.isOnSale && !context.data.discountType) {
-          return "Please select a discount type.";
-        }
-        if (context.data.discountType === "percentage" && !value) {
-          return "Please enter a percentage value.";
-        }
-        return true;
-      }),
-      discountAmount: z.string().refine((value, context) => {
-        if (!context || !context.data) return true; // Handle undefined context
-        if (context.data.isOnSale && !context.data.discountType) {
-          return "Please select a discount type.";
-        }
-        if (context.data.discountType === "fixed" && !value) {
-          return "Please enter a fixed amount value.";
-        }
-        return true;
-      }),
+      discountType: z.string().nullable(),
+      discountPercentage: z.string().optional().nullable(),
+      discountAmount: z.string().optional().nullable(),
     })
     .refine(
       (data) => {
@@ -146,11 +129,25 @@ export default function UploadPage() {
     const validation = productSchema.safeParse(preparedData);
 
     if (!validation.success) {
-      // If validation fails, show the first error and prevent submission
-      const firstError = validation.error.issues[0];
-      toast.error(firstError.message);
-      setLoading(false);
-      return;
+      // Handle specific validation error for 'discountType'
+      const discountTypeError = validation.error.errors.find(
+        (err) =>
+          err.path[0] === "discountType" &&
+          err.message === "Expected 'percentage' | 'fixed', received null"
+      );
+
+      if (discountTypeError) {
+        validation.data = {
+          ...validation.data,
+          discountType: null,
+        };
+      } else {
+        // If validation fails for other reasons, show the first error and prevent submission
+        const firstError = validation.error.issues[0];
+        toast.error(firstError.message);
+        setLoading(false);
+        return;
+      }
     }
 
     try {

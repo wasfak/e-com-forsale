@@ -48,9 +48,9 @@ export default function SideBar() {
     setIsOrdersOpen(!isOrdersOpen);
   };
   const orderSubRoutes = [
-    { label: "Processing Orders", href: "/dashboard/orders/processing" },
+    /*    { label: "Processing Orders", href: "/dashboard/orders/processing" },
     { label: "Finished Orders", href: "/dashboard/orders/finished" },
-    { label: "Refunded Orders", href: "/dashboard/orders/refund" },
+    { label: "Refunded Orders", href: "/dashboard/orders/refund" }, */
   ];
   return (
     <div className="space-y-4 py-4 flex flex-col h-full bg-[#111827] text-white ">

@@ -43,7 +43,7 @@ export async function POST(req) {
         isPaid: true,
         address: addressString,
         phone: session?.customer_details?.phone || "",
-        status: "processing",
+        status: "new",
       },
     };
 

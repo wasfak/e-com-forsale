@@ -13,6 +13,22 @@ const itemSchema = new Schema(
     itemId: {
       type: String,
     },
+    category: {
+      type: String,
+      default: "none",
+    },
+    subcategory: {
+      type: String,
+      default: "none",
+    },
+    soldUnits: {
+      type: Number,
+      default: 0,
+    },
+    stock: {
+      type: Number,
+      default: 1,
+    },
     details: {
       type: String,
       required: true,
@@ -24,6 +40,10 @@ const itemSchema = new Schema(
     isOnSale: {
       type: Boolean,
       default: false,
+    },
+    published: {
+      type: String,
+      default: "published",
     },
     imageUrl: {
       type: String,

@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import { Toaster } from "react-hot-toast";
 import CartModal from "@/components/CartModal";
+import PlausibleProvider from "next-plausible";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,6 +17,13 @@ export default function RootLayout({ children }) {
   return (
     <ClerkProvider>
       <html lang="en">
+        <head>
+          <PlausibleProvider
+            domain="test.dev"
+            trackLocalhost={true}
+            enabled={true}
+          />
+        </head>
         <body className={inter.className}>
           <Toaster position="top-center " />
           <Navbar />

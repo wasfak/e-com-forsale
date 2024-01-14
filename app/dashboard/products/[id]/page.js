@@ -95,7 +95,7 @@ export default function ModifyItemPage() {
     return "";
   }
   return (
-    <div className="p-2 m-2">
+    <div className="p-2 m-2 ">
       <h1 className="text-3xl font-semibold mb-6">Modify Product</h1>
       <form className="space-y-4">
         <div className="flex flex-col mb-4">

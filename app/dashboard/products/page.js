@@ -1,69 +1,76 @@
+"use client";
+import React, { useEffect, useState } from "react";
+import useCartStore from "@/cartStore";
 import AdminItems from "@/components/AdminItems";
+import AdminItemFilter from "../../../components/AdminItemFilter";
 
-import db from "@/db";
-import ItemModel from "@/models/itemSchema";
-import { auth } from "@clerk/nextjs";
-import mongoose from "mongoose";
-import { Inter } from "next/font/google";
+export default function AdminProducts() {
+  const [mounted, setMounted] = useState(false);
+  const [selectedStatus, setSelectedStatus] = useState(null);
+  const [allItems, setAllItems] = useState([]);
+  const [filteredItems, setFilteredItems] = useState([]);
 
-const inter = Inter({ subsets: ["latin"] });
+  const { clearAdminItems, clearOrders, setAdminItems } = useCartStore();
 
-export default async function AdminProducts() {
-  let plainData = [];
-  let error = null;
+  useEffect(() => {
+    setMounted(true);
 
-  try {
-    const { userId } = auth();
+    getAllItems();
+  }, []);
 
-    if (!userId) {
-      throw new Error("User not authenticated");
-    }
-
-    await db.connectDb();
-    const data = await ItemModel.find({ userId }).lean();
-
-    plainData = data.map((doc) => {
-      const plainObject = {};
-
-      Object.keys(doc).forEach((key) => {
-        const value = doc[key];
-
-        if (key === "_id" || value instanceof mongoose.Types.ObjectId) {
-          plainObject[key] = value.toString();
-        } else if (value instanceof Date) {
-          plainObject[key] = value.toISOString();
-        } else {
-          plainObject[key] = value;
-        }
-      });
-
-      return plainObject;
+  const getAllItems = async () => {
+    const res = await fetch("/api/getAllItems", {
+      method: "GET",
     });
-  } catch (err) {
-    console.error("Failed to fetch products:", err);
-    error = err.message || "Failed to load products.";
-  } finally {
-    await db.disconnectDb();
-  }
 
-  if (error) {
-    return <div className="text-center py-10">{error}</div>;
-  }
+    const response = await res.json();
+    const items = response.data;
+    clearAdminItems();
+    setAllItems(items);
 
-  if (plainData.length === 0) {
-    return (
-      <div className="text-center py-10">
-        No items. Please add items from the upload page.
-      </div>
-    );
+    // Filter items based on selected status
+    const filtered = filterItemsByStatus(items, selectedStatus);
+    setFilteredItems(filtered);
+
+    // Update state used by other components
+    setAdminItems(filtered);
+  };
+
+  const filterItemsByStatus = (items, status) => {
+    if (status === "published") {
+      return items.filter((item) => item.published === "published");
+    } else if (status === "unpublished") {
+      return items.filter((item) => item.published === "unpublished");
+    } else {
+      return items;
+    }
+  };
+
+  const filterOrdersByStatus = (status) => {
+    setSelectedStatus(status);
+
+    // Filter items based on selected status
+    const filtered = filterItemsByStatus(allItems, status);
+    setFilteredItems(filtered);
+
+    // Update state used by other components
+    setAdminItems(filtered);
+  };
+
+  if (!mounted) {
+    return "";
   }
 
   return (
-    <div className={`container mx-auto py-8 ${inter.className}`}>
-      <h1 className="text-2xl font-bold mb-2 text-center">Products</h1>
-      <div className="grid grid-cols-3 gap-4 p-4 bg-[##fbf7f5]">
-        {plainData.map((item, index) => (
-          <AdminItems key={item._id} item={item} />
+    <div className="container mx-auto py-8">
+      <AdminItemFilter onSelectStatus={filterOrdersByStatus} />
+      <div className="flex items-center justify-evenly gap-2 p-2">
+        {filteredItems.map((item, index) => (
+          <AdminItems
+            key={item._id}
+            item={item}
+            selectedStatus={selectedStatus}
+          />
         ))}
       </div>
     </div>

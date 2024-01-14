@@ -18,8 +18,6 @@ export default async function FinishedOrders() {
       );
     }
     const items = await ItemModel.find({ _id: orders[0].orderItems });
-
-    console.log(items);
   } catch (error) {
     console.log(error);
   } finally {

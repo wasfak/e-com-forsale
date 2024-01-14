@@ -1,6 +1,18 @@
 import mongoose, { Schema, model, models } from "mongoose";
 import { v4 as uuidv4 } from "uuid";
-// User schema
+
+const orderItemSchema = new Schema({
+  itemId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Item", // Replace with your Item model name
+    required: true,
+  },
+  quantity: {
+    type: Number,
+    default: 1,
+  },
+});
+
 const orderSchema = new Schema(
   {
     userId: {
@@ -9,17 +21,11 @@ const orderSchema = new Schema(
     },
     id: {
       type: String,
-      default: () => uuidv4(), // Automatically generate a UUID for each new document
-      unique: true, // Ensure the id is unique within the collection
+      default: () => uuidv4(),
+      unique: true,
       required: true,
     },
-
-    orderItems: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Item", // Replace with your OrderItem model name
-      },
-    ],
+    orderItems: [orderItemSchema], // Updated to use the orderItemSchema
     isPaid: {
       type: Boolean,
       default: false,
@@ -36,11 +42,15 @@ const orderSchema = new Schema(
       type: String,
       default: "pending",
     },
+    userName: { type: String, default: "" },
+    userMail: { type: String, default: "" },
+    total: {
+      type: Number,
+    },
   },
   { timestamps: true }
 );
 
-// Create the model from the schema
 const OrderModel = models.Order || model("Order", orderSchema);
 
 export default OrderModel;

@@ -5,7 +5,7 @@ import MyButton from "./MyButton";
 export const OrdersList = async ({ order }) => {
   const items = await ItemModel.find({ _id: order.orderItems });
   const addressLines = order.address.split(", ");
-  /*   console.log(items); */
+
   return (
     <div className="flex flex-col items-start justify-start shadow-2xl rounded-2xl p-4 gap-y-2">
       <span>
@@ -25,7 +25,8 @@ export const OrdersList = async ({ order }) => {
         </span>
       </div>
 
-      <span>Order date: {order.createdAt.toDateString()}</span>
+      <span>Order date: {order?.createdAt.toDateString()}</span>
+      <span>Total: ${order?.total}</span>
       <MyButton orderId={order.id}>change to finished</MyButton>
     </div>
   );

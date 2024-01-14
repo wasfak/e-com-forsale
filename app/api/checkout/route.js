@@ -2,7 +2,7 @@ import db from "@/db";
 import { stripe } from "@/lib/stripe";
 import ItemModel from "@/models/itemSchema";
 import OrderModel from "@/models/ordersSchema";
-import { auth } from "@clerk/nextjs";
+import { auth, currentUser } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 
 const corsHeaders = {
@@ -18,30 +18,59 @@ export async function OPTIONS() {
 export async function POST(req) {
   try {
     const { productIds } = await req.json();
+
     const { userId } = auth();
+    const user = await currentUser();
+    const userName = user?.firstName + " " + user?.lastName;
+    const userMail = user?.emailAddresses?.[0]?.emailAddress;
+    console.log(userMail);
 
     if (!productIds || productIds.length === 0) {
       return NextResponse("Product Ids Are Required", { status: 400 });
     }
 
     await db.connectDb();
-    const products = await ItemModel.find({ _id: { $in: productIds } });
-
-    const lineItems = products.map((product) => ({
-      quantity: 1,
-      price_data: {
-        currency: "USD",
-        product_data: {
-          name: product.name,
-        },
-        unit_amount: product.priceAfterSale * 100,
-      },
+    const orderItems = productIds.map((item) => ({
+      itemId: item.itemId,
+      quantity: item.quantity,
     }));
 
+    const products = await ItemModel.find({
+      _id: { $in: orderItems.map((orderItem) => orderItem.itemId) },
+    });
+
+    const lineItems = orderItems.map((orderItem) => {
+      const product = products.find(
+        (p) => p._id.toString() === orderItem.itemId.toString()
+      );
+
+      const unit_amount = Math.round(product.priceAfterSale * 100);
+
+      return {
+        quantity: orderItem.quantity,
+        price_data: {
+          currency: "USD",
+          product_data: {
+            name: product.name,
+          },
+          unit_amount: unit_amount,
+        },
+      };
+    });
+
+    const total = lineItems.reduce(
+      (acc, lineItem) =>
+        acc + (lineItem.quantity * lineItem.price_data.unit_amount) / 100,
+      0
+    );
+
     const order = new OrderModel({
-      orderItems: productIds,
+      orderItems,
       isPaid: false,
       userId,
+      total,
+      userName,
+      userMail,
     });
     await order.save();
 

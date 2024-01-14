@@ -60,7 +60,7 @@ export default async function ProductsPage() {
   return (
     <div className={`container mx-auto py-8 ${inter.className}`}>
       <h1 className="text-2xl font-bold mb-2 text-center">Products</h1>
-      <div className="grid grid-cols-3 gap-4 p-4 bg-[##fbf7f5]">
+      <div className="flex items-center justify-between">
         {plainData.map((item, index) => (
           <Items key={item._id} item={item} index={index} />
         ))}

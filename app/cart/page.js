@@ -31,13 +31,9 @@ export default function CartPage() {
     }
   }, [searchParams, clearCart]);
 
-  const totalPrice = items.reduce((total, item) => {
-    return total + Number(item.price);
-  }, 0);
-
   // Calculate the total sum
   const total = items.reduce(
-    (total, item) => total + item.price * (item.quantity || 1),
+    (total, item) => total + item.priceAfterSale * (item.quantity || 1),
     0
   );
 
@@ -49,7 +45,10 @@ export default function CartPage() {
           "Content-Type": "application/json", // Indicate the content type
         },
         body: JSON.stringify({
-          productIds: items.map((item) => item._id), // Your request body
+          productIds: items.map((item) => ({
+            itemId: item._id,
+            quantity: item.quantity,
+          })), // Your request body
         }),
       });
 
@@ -64,10 +63,6 @@ export default function CartPage() {
       toast.error("Error during checkout."); // Display some error message
     }
   };
-
-  /*   if (items.length === 0) {
-    return <div className="text-center py-10">Your cart is empty.</div>;
-  } */
 
   if (!mounted) {
     return "";

@@ -5,6 +5,8 @@ const useCartStore = create(
   persist(
     (set) => ({
       items: [],
+      orders: [],
+      adminItems: [],
 
       // Adds an item or increases its quantity
       addItem: (newItem) =>
@@ -24,7 +26,8 @@ const useCartStore = create(
             return { items: [...state.items, { ...newItem, quantity: 1 }] };
           }
         }),
-
+      setOrders: (newOrders) => set({ orders: newOrders }),
+      setAdminItems: (newItems) => set({ adminItems: newItems }),
       // Removes an item from the cart
       removeItem: (itemId) =>
         set((state) => ({
@@ -33,6 +36,8 @@ const useCartStore = create(
 
       // Clears all items from the cart
       clearCart: () => set({ items: [] }),
+      clearOrders: () => set({ orders: [] }),
+      clearAdminItems: () => set({ adminItems: [] }),
 
       // Increase the quantity of an item
       increase: (item) =>
