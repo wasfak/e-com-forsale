@@ -3,9 +3,10 @@ import ItemModel from "@/models/itemSchema";
 import OrderModel from "@/models/ordersSchema";
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs";
-export const revalidate = "force-dynamic";
+
+export const revalidate = 0;
 export async function GET(req) {
-  const { userId } = await auth();
+  const { userId } = auth();
 
   try {
     await db.connectDb();

@@ -3,7 +3,7 @@ import db from "@/db";
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs";
 import ItemModel from "@/models/itemSchema";
-
+export const revalidate = 0;
 export const GET = async (req) => {
   const { userId } = auth();
 
