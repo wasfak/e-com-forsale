@@ -41,14 +41,17 @@ export async function POST(req) {
       { new: true }
     );
 
-    for (const orderItem of updatedOrder.orderItems) {
-      const { itemId, quantity } = orderItem;
+    if (newStatus === "finished") {
+      // Only apply the logic when the order is changing to "finished"
+      for (const orderItem of updatedOrder.orderItems) {
+        const { itemId, quantity } = orderItem;
 
-      // Find the item and update its soldUnits
-      await ItemModel.findOneAndUpdate(
-        { _id: itemId },
-        { $inc: { soldUnits: quantity } }
-      );
+        // Find the item and update its soldUnits
+        await ItemModel.findOneAndUpdate(
+          { _id: itemId },
+          { $inc: { soldUnits: quantity } }
+        );
+      }
     }
 
     return NextResponse.json({
