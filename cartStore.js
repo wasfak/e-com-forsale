@@ -3,7 +3,7 @@ import { persist } from "zustand/middleware";
 
 const useCartStore = create(
   persist(
-    (set) => ({
+    (set, get) => ({
       items: [],
       orders: [],
       adminItems: [],
@@ -26,6 +26,8 @@ const useCartStore = create(
             return { items: [...state.items, { ...newItem, quantity: 1 }] };
           }
         }),
+      getItemById: (itemId) =>
+        get().adminItems.find((item) => item._id === itemId) || null,
       setOrders: (newOrders) => set({ orders: newOrders }),
       setAdminItems: (newItems) => set({ adminItems: newItems }),
       // Removes an item from the cart

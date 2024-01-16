@@ -9,13 +9,39 @@ export async function POST(req) {
 
   try {
     await db.connectDb();
-    const order = await OrderModel.findOneAndUpdate(
+
+    // Find the order
+    const order = await OrderModel.findOne({ id: orderId });
+
+    if (!order) {
+      return NextResponse.json({
+        status: 404,
+        message: "Order not found",
+      });
+    }
+
+    let newStatus;
+
+    // Check the current status and update accordingly
+    if (order.status === "new") {
+      newStatus = "processing";
+    } else if (order.status === "processing") {
+      newStatus = "finished";
+    } else {
+      return NextResponse.json({
+        status: 400,
+        message: "Invalid order status",
+      });
+    }
+
+    // Update the order status
+    const updatedOrder = await OrderModel.findOneAndUpdate(
       { id: orderId },
-      { status: "finished" },
+      { status: newStatus },
       { new: true }
     );
 
-    for (const orderItem of order.orderItems) {
+    for (const orderItem of updatedOrder.orderItems) {
       const { itemId, quantity } = orderItem;
 
       // Find the item and update its soldUnits
@@ -24,13 +50,17 @@ export async function POST(req) {
         { $inc: { soldUnits: quantity } }
       );
     }
-    console.log(order.orderItems);
+
     return NextResponse.json({
       status: 200,
-      message: "Modified Successfully!!",
+      message: `Order status updated to ${newStatus}`,
     });
   } catch (error) {
-    console.log(error);
+    console.error("Error modifying order:", error);
+    return NextResponse.json({
+      status: 500,
+      message: "Internal Server Error",
+    });
   } finally {
     db.disconnectDb();
   }

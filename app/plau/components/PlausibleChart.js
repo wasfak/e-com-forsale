@@ -6,7 +6,7 @@ const PlausibleChart = ({ data }) => {
 
   useEffect(() => {
     if (data && data.results) {
-      const dates = data.results.map((entry) => entry.date);
+      const dates = data.results.map((entry) => entry.date.slice(5));
       const visitors = data.results.map((entry) => entry.visitors);
 
       const chartData = {
