@@ -3,10 +3,10 @@ import Image from "next/image";
 export const Loader = () => {
   return (
     <div className="h-full flex flex-col gap-y-4 items-center justify-center">
-      {/*       <div className="w-10 h-10 relative animate-spin">
+      <div role="status">
         <svg
-          aria-hidden="true"
-          className="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+          ariaHidden="true"
+          className="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-black"
           viewBox="0 0 100 101"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
@@ -20,8 +20,7 @@ export const Loader = () => {
             fill="currentFill"
           />
         </svg>
-      </div> */}
-      <p className="text-2xl text-muted-foreground">Loading...</p>
+      </div>
     </div>
   );
 };

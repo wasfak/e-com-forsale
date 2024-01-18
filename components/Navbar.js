@@ -16,6 +16,7 @@ export default function Navbar() {
   const [mounted, setMounted] = useState(false);
   const [userInformation, setUserInformation] = useState([]);
   const totalCart = useCartStore((state) => state.items);
+
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -23,6 +24,7 @@ export default function Navbar() {
   useEffect(() => {
     userInfo();
   }, []);
+
   const userInfo = async () => {
     setLoading(true);
     const res = await fetch("/api/userInfo", {
@@ -35,30 +37,29 @@ export default function Navbar() {
   };
 
   if (!mounted) {
-    return "";
+    return null;
   }
+
   if (loading) {
     return <Loader />;
   }
+
   return (
     <header
       className={`w-full flex items-center p-2 justify-between bg-[#832e29] font-bold text-slate-900 ${inter.className}`}
     >
-      <Image src={logo} alt="logo" width={65} height="auto" priority />
+      <Image src={logo} alt="logo" width={65} height={65} priority />
 
-      {userInformation === "no" ? (
-        <div className="flex items-center justify-between gap-x-6">
-          <Link href="/">Home</Link>
-          <Link href="/Products">Products</Link>
-        </div>
-      ) : (
-        <div className="flex items-center justify-between gap-x-6">
-          <Link href="/">Home</Link>
-          <Link href="/Products">Products</Link>
-          <Link href="/UploadPage">Upload product</Link>
-          <Link href="/dashboard">Dashboard</Link>
-        </div>
-      )}
+      <nav className="flex items-center justify-between gap-x-6">
+        <Link href="/">Home</Link>
+        <Link href="/Products">Products</Link>
+        {userInformation !== "no" && (
+          <>
+            <Link href="/UploadPage">Upload product</Link>
+            <Link href="/dashboard">Dashboard</Link>
+          </>
+        )}
+      </nav>
 
       <div className="flex items-center justify-between gap-x-4">
         <Link href="/cart">
