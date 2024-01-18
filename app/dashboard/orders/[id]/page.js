@@ -7,9 +7,18 @@ import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import OrderItem from "../components/OrderItem";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function OrderDetailPage({ params }) {
   const [mounted, setMounted] = useState(false);
+  const [show, setShow] = useState(true);
+
   const router = useRouter();
   const { id } = params;
 
@@ -20,19 +29,35 @@ export default function OrderDetailPage({ params }) {
     setMounted(true);
   }, []);
 
+  const [selectedStatus, setSelectedStatus] = useState(order?.status);
+
+  const handleStatusChange = (status) => {
+    setSelectedStatus(status);
+    setShow(false);
+  };
+
+  const handleStatusUpdate = async () => {
+    try {
+      // Update the order status
+      const res = await fetch("/api/modifyOrder", {
+        method: "POST",
+        body: JSON.stringify({
+          orderId: order.id,
+          newStatus: selectedStatus,
+        }),
+      });
+      const response = await res.json();
+      toast.success(response.message);
+      router.replace("/dashboard/orders");
+    } catch (error) {
+      console.error("Error updating order status:", error);
+      toast.error("Failed to update order status");
+    }
+  };
+
   if (!mounted) {
     return "";
   }
-
-  const handelModify = async () => {
-    const res = await fetch("/api/modifyOrder", {
-      method: "POST",
-      body: JSON.stringify(order.id),
-    });
-    const response = await res.json();
-    toast.success(response.message);
-    router.replace("/dashboard/orders");
-  };
 
   // Splitting the address into parts
   const addressParts =
@@ -43,7 +68,7 @@ export default function OrderDetailPage({ params }) {
       {order ? (
         <div>
           <h1 className="text-2xl font-bold mb-4">Order Details</h1>
-          <h2 className="text-lg font-bold my-2">Order Items:</h2>
+          <h2 className="text-lg font-bold my-2">Order Items</h2>
           <div>
             {order.orderItems.map((item) => (
               <OrderItem key={item._id} item={item} />
@@ -60,14 +85,49 @@ export default function OrderDetailPage({ params }) {
           </div>
           <p>Phone: {order.phone}</p>
           <p>Email: {order.userMail}</p>
-          <p>Order state: {order.status}</p>
+          <p>
+            Order state:
+            <Select>
+              <SelectTrigger className="w-[180px]">
+                {/* Use the state variable for the Select component value */}
+                <SelectValue
+                  placeholder={selectedStatus}
+                  onClick={() => setShow(true)}
+                />
+              </SelectTrigger>
+              {show && (
+                <SelectContent>
+                  <div
+                    className="cursor-pointer"
+                    onClick={() => handleStatusChange("processing")}
+                  >
+                    Processing
+                  </div>
+                  <div
+                    className="cursor-pointer border-t"
+                    onClick={() => handleStatusChange("finished")}
+                  >
+                    Finished
+                  </div>
+                  <div
+                    className="cursor-pointer border-t"
+                    onClick={() => handleStatusChange("new")}
+                  >
+                    New
+                  </div>
+                  <div
+                    className="cursor-pointer border-t"
+                    onClick={() => handleStatusChange("Canceled")}
+                  >
+                    Canceled
+                  </div>
+                </SelectContent>
+              )}
+            </Select>
+          </p>
           <div className="flex items-center justify-between w-full">
-            <Button onClick={handelModify} className="mt-2">
-              {order.status === "new"
-                ? "Progress"
-                : order.status === "processing"
-                ? "Finished"
-                : "click"}
+            <Button onClick={handleStatusUpdate} className="mt-2">
+              Update Status
             </Button>
             <Button variant="destructive">Cancel Order</Button>
           </div>

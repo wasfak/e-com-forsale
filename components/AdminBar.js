@@ -13,7 +13,7 @@ export default function AdminBar({ onSelectStatus }) {
   const isSelected = (status) => selectedStatus === status;
 
   return (
-    <div className="flex items-center justify-between text-white p-4 shadow-2xl rounded-2xl mx-4 mt-2 w-[700px]">
+    <div className="flex items-center justify-between text-white p-4 shadow-2xl rounded-2xl mx-4 w-[700px]">
       <Button
         className={isSelected(null) ? "bg-blue-500" : ""}
         onClick={() => handleSelectStatus(null)}

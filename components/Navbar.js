@@ -9,39 +9,57 @@ const inter = Inter({ subsets: ["latin"] });
 
 import { UserButton } from "@clerk/nextjs";
 import useCartStore from "@/cartStore";
+import { Loader } from "./Loader";
 
 export default function Navbar() {
+  const [loading, setLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [userInformation, setUserInformation] = useState([]);
   const totalCart = useCartStore((state) => state.items);
   useEffect(() => {
     setMounted(true);
   }, []);
 
+  useEffect(() => {
+    userInfo();
+  }, []);
+  const userInfo = async () => {
+    setLoading(true);
+    const res = await fetch("/api/userInfo", {
+      method: "GET",
+    });
+    const response = await res.json();
+
+    setUserInformation(response.data);
+    setLoading(false);
+  };
+
   if (!mounted) {
     return "";
   }
-
+  if (loading) {
+    return <Loader />;
+  }
   return (
     <header
       className={`w-full flex items-center p-2 justify-between bg-[#832e29] font-bold text-slate-900 ${inter.className}`}
     >
-      <Link href="/" as={"image"}>
-        <Image
-          src={logo}
-          alt="logo"
-          width={50}
-          height={50}
-          priority
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-        />
-      </Link>
+      <Image src={logo} alt="logo" width={65} height="auto" priority />
 
-      <div className="flex items-center justify-between gap-x-6">
-        <Link href="/">Home</Link>
-        <Link href="/Products">Products</Link>
-        <Link href="/UploadPage">Upload product</Link>
-        <Link href="/dashboard">Dashboard</Link>
-      </div>
+      {userInformation === "no" ? (
+        <div className="flex items-center justify-between gap-x-6">
+          <Link href="/">Home</Link>
+          <Link href="/Products">Products</Link>
+        </div>
+      ) : (
+        <div className="flex items-center justify-between gap-x-6">
+          <Link href="/">Home</Link>
+          <Link href="/Products">Products</Link>
+          <Link href="/UploadPage">Upload product</Link>
+          <Link href="/dashboard">Dashboard</Link>
+        </div>
+      )}
+
       <div className="flex items-center justify-between gap-x-4">
         <Link href="/cart">
           <div className="relative">

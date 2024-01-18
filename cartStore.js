@@ -7,6 +7,7 @@ const useCartStore = create(
       items: [],
       orders: [],
       adminItems: [],
+      selectedProducts: [],
 
       // Adds an item or increases its quantity
       addItem: (newItem) =>

@@ -5,7 +5,8 @@ import { NextResponse } from "next/server";
 
 export async function POST(req) {
   const body = await req.json();
-  const orderId = body;
+  const { orderId, newStatus } = body;
+  console.log(newStatus);
 
   try {
     await db.connectDb();
@@ -17,20 +18,6 @@ export async function POST(req) {
       return NextResponse.json({
         status: 404,
         message: "Order not found",
-      });
-    }
-
-    let newStatus;
-
-    // Check the current status and update accordingly
-    if (order.status === "new") {
-      newStatus = "processing";
-    } else if (order.status === "processing") {
-      newStatus = "finished";
-    } else {
-      return NextResponse.json({
-        status: 400,
-        message: "Invalid order status",
       });
     }
 

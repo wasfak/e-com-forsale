@@ -23,7 +23,6 @@ export async function POST(req) {
     const user = await currentUser();
     const userName = user?.firstName + " " + user?.lastName;
     const userMail = user?.emailAddresses?.[0]?.emailAddress;
-    console.log(userMail);
 
     if (!productIds || productIds.length === 0) {
       return NextResponse("Product Ids Are Required", { status: 400 });

@@ -13,19 +13,18 @@ const OrderItem = ({ item }) => {
 
     setItemInStore(fetchedItem);
   }, [getItemById, item.itemId]);
-  console.log(itemInStore);
+
   return (
     <div className="mb-2">
       {/* Render the item details */}
       {itemInStore && (
         <>
           <div className="flex items-center justify-between w-[50vw]">
-            {" "}
             <p>
-              Item Name: <br /> {itemInStore.name}
+              Item Name <br /> {itemInStore.name}
             </p>
             <p>
-              Quantity: <br /> {item.quantity}
+              Quantity <br /> {item.quantity}
             </p>
             <Image
               src={itemInStore.imageUrl}

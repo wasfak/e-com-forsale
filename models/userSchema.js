@@ -10,15 +10,11 @@ const userSchema = new Schema(
     },
     userId: {
       type: String,
+      unique: true,
     },
     userStatus: {
       type: String,
-      default: "active",
-    },
-    role: {
-      type: String,
-      enum: ["user", "admin"],
-      default: "user",
+      default: "test",
     },
   },
   { timestamps: true }
