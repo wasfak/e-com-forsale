@@ -8,8 +8,9 @@ import {
   ShoppingBagIcon,
   TagIcon,
 } from "lucide-react";
+import { RiDashboard3Fill } from "react-icons/ri";
 import { Montserrat } from "next/font/google";
-import Image from "next/image";
+
 import Link from "next/link";
 import { useState } from "react";
 
@@ -18,7 +19,7 @@ const montserrat = Montserrat({ weight: "600", subsets: ["latin"] });
 const routes = [
   {
     label: "Dashboard",
-    icon: LayoutDashboard,
+    icon: RiDashboard3Fill,
     href: "/dashboard",
     color: "text-sky-500",
   },
@@ -38,6 +39,12 @@ const routes = [
     label: "Analytics",
     icon: TagIcon,
     href: "/dashboard/analytics",
+    color: "text-sky-500",
+  },
+  {
+    label: "Categories",
+    icon: LayoutDashboard,
+    href: "/dashboard/categories",
     color: "text-sky-500",
   },
 ];

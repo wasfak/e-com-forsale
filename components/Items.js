@@ -78,7 +78,7 @@ export default function Items({ item, index }) {
         </div>
         <button
           onClick={() => addItem(item)}
-          className="flex items-center text-white justify-center rounded-md bg-[#6495ED] px-5 py-2.5 text-center text-sm font-medium  hover:bg-[#ff7b7b] focus:outline-none focus:ring-4 focus:ring-blue-300 duration-300"
+          className="flex items-center text-white justify-center rounded-md bg-[#5d6bc4] px-5 py-2.5 text-center text-sm font-medium  hover:bg-[#ff7b7b] focus:outline-none focus:ring-4 focus:ring-blue-300 duration-300"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

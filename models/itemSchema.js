@@ -13,14 +13,20 @@ const itemSchema = new Schema(
     itemId: {
       type: String,
     },
-    category: {
-      type: String,
-      default: "none",
-    },
-    subcategory: {
-      type: String,
-      default: "none",
-    },
+    categories: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Category",
+        default: "",
+      },
+    ],
+    subcategories: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Subcategory",
+        default: "",
+      },
+    ],
     soldUnits: {
       type: Number,
       default: 0,

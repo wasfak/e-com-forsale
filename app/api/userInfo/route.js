@@ -7,7 +7,9 @@ import { currentUser } from "@clerk/nextjs";
 export const revalidate = 0;
 export const GET = async (req) => {
   const user = await currentUser();
-
+  if (!user) {
+    return NextResponse.json({ status: 200, data: "no" });
+  }
   try {
     await db.connectDb();
 

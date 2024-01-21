@@ -5,7 +5,7 @@ export const Loader = () => {
     <div className="h-full flex flex-col gap-y-4 items-center justify-center">
       <div role="status">
         <svg
-          ariaHidden="true"
+          aria-hidden="true"
           className="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-black"
           viewBox="0 0 100 101"
           fill="none"

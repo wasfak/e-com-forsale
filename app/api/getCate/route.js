@@ -2,16 +2,18 @@ import db from "@/db";
 
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs";
-import ItemModel from "@/models/itemSchema";
+import CategoryModel from "@/models/Category";
 export const revalidate = 0;
-export const dynamic = "force-dynamic";
 export const GET = async (req) => {
   const { userId } = auth();
+  if (!userId) {
+    return NextResponse.json({ status: 400, message: "NO USER" });
+  }
 
   try {
     await db.connectDb();
 
-    const data = await ItemModel.find({ userId });
+    const data = await CategoryModel.find({ userId });
 
     return NextResponse.json({ status: 200, data });
   } catch (error) {

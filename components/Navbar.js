@@ -9,7 +9,6 @@ const inter = Inter({ subsets: ["latin"] });
 
 import { UserButton } from "@clerk/nextjs";
 import useCartStore from "@/cartStore";
-import { Loader } from "./Loader";
 
 export default function Navbar() {
   const [loading, setLoading] = useState(false);
@@ -21,44 +20,29 @@ export default function Navbar() {
     setMounted(true);
   }, []);
 
-  useEffect(() => {
-    userInfo();
-  }, []);
-
-  const userInfo = async () => {
-    setLoading(true);
-    const res = await fetch("/api/userInfo", {
-      method: "GET",
-    });
-    const response = await res.json();
-
-    setUserInformation(response.data);
-    setLoading(false);
-  };
-
   if (!mounted) {
     return null;
   }
 
-  if (loading) {
-    return <Loader />;
-  }
-
   return (
     <header
-      className={`w-full flex items-center p-2 justify-between bg-[#832e29] font-bold text-slate-900 ${inter.className}`}
+      className={`w-full flex items-center p-2 justify-between bg-[#0e3746] font-bold text-slate-900`}
     >
       <Image src={logo} alt="logo" width={65} height={65} priority />
 
       <nav className="flex items-center justify-between gap-x-6">
-        <Link href="/">Home</Link>
-        <Link href="/Products">Products</Link>
-        {userInformation !== "no" && (
-          <>
-            <Link href="/UploadPage">Upload product</Link>
-            <Link href="/dashboard">Dashboard</Link>
-          </>
-        )}
+        <Link href="/" className="text-white">
+          Home
+        </Link>
+        <Link href="/Products" className="text-white">
+          Products
+        </Link>
+
+        <>
+          <Link href="/dashboard" className="text-white">
+            Dashboard
+          </Link>
+        </>
       </nav>
 
       <div className="flex items-center justify-between gap-x-4">

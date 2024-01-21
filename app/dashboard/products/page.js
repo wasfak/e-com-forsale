@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Loader } from "@/components/Loader";
 
 import toast from "react-hot-toast";
+import ProductsActions from "@/components/ProductsActions";
 
 export default function AdminProducts() {
   const [mounted, setMounted] = useState(false);
@@ -79,11 +80,10 @@ export default function AdminProducts() {
 
   return (
     <div className="container mx-auto">
-      <AdminItemFilter onSelectStatus={filterOrdersByStatus} />
-      {selectedProducts.length > 0 ? (
-        <Button className="block relative">filter</Button>
-      ) : null}
-      <div className="flex items-center justify-evenly gap-2 p-2">
+      <AdminItemFilter onSelectStatus={filterOrdersByStatus} className="mb-8" />
+      <ProductsActions className="mb-8" />
+
+      <div className="flex items-center justify-evenly gap-2 p-2 mt-8">
         {filteredItems.map((item, index) => (
           <AdminItems
             key={item._id}

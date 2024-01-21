@@ -58,7 +58,7 @@ export default async function ProductsPage() {
   }
 
   return (
-    <div className={`container mx-auto py-8 ${inter.className}`}>
+    <div className={`container mx-auto py-8 ${inter.className} bg-[#d6ebe6]`}>
       <h1 className="text-2xl font-bold mb-2 text-center">Products</h1>
       <div className="flex items-center justify-between">
         {plainData.map((item, index) => (

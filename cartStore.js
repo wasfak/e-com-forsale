@@ -41,6 +41,7 @@ const useCartStore = create(
       clearCart: () => set({ items: [] }),
       clearOrders: () => set({ orders: [] }),
       clearAdminItems: () => set({ adminItems: [] }),
+      clearSelectedItems: () => set({ selectedProducts: [] }),
 
       // Increase the quantity of an item
       increase: (item) =>
@@ -73,6 +74,7 @@ const useCartStore = create(
     {
       name: "cart-storage", // unique name
       getStorage: () => (typeof window !== "undefined" ? localStorage : null), // use localStorage in the browser
+      blacklist: ["selectedProducts"],
     }
   )
 );
