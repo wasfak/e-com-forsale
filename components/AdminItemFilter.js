@@ -16,19 +16,19 @@ export default function AdminItemFilter({ onSelectStatus }) {
   return (
     <div className="relative flex items-center justify-between text-white p-4  rounded-2xl mx-4 mt-2 w-[700px] ">
       <Button
-        className={isSelected(null) ? "bg-white text-black" : ""}
+        className={isSelected(null) ? "bg-sky-500" : ""}
         onClick={() => handleSelectStatus(null)}
       >
         <span className="">All</span>
       </Button>
       <Button
-        className={isSelected("published") ? "bg-blue-500" : ""}
+        className={isSelected("published") ? "bg-sky-500" : ""}
         onClick={() => handleSelectStatus("published")}
       >
         <span className="">Published</span>
       </Button>
       <Button
-        className={isSelected("unpublished") ? "bg-blue-500" : ""}
+        className={isSelected("unpublished") ? "bg-sky-500" : ""}
         onClick={() => handleSelectStatus("unpublished")}
       >
         <span className="">UnPublished</span>

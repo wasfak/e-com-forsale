@@ -26,7 +26,7 @@ export default function RootLayout({ children }) {
         </head>
         <body className={inter.className}>
           <Toaster position="top-center " />
-          <Navbar />
+          {/* <Navbar /> */}
           {children}
           <CartModal />
         </body>

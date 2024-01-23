@@ -11,9 +11,8 @@ import { UserButton } from "@clerk/nextjs";
 import useCartStore from "@/cartStore";
 
 export default function Navbar() {
-  const [loading, setLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const [userInformation, setUserInformation] = useState([]);
+
   const totalCart = useCartStore((state) => state.items);
 
   useEffect(() => {

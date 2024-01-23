@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-
+import { UserButton } from "@clerk/nextjs";
 import {
   ShoppingCartIcon,
   LayoutDashboard,
@@ -10,9 +10,11 @@ import {
 } from "lucide-react";
 import { RiDashboard3Fill } from "react-icons/ri";
 import { Montserrat } from "next/font/google";
+import { IoHomeSharp } from "react-icons/io5";
+import { MdViewCompactAlt } from "react-icons/md";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const montserrat = Montserrat({ weight: "600", subsets: ["latin"] });
 
@@ -47,10 +49,26 @@ const routes = [
     href: "/dashboard/categories",
     color: "text-sky-500",
   },
+  {
+    label: "Home",
+    icon: IoHomeSharp,
+    href: "/",
+    color: "text-sky-500",
+  },
+  {
+    label: "View Products",
+    icon: MdViewCompactAlt,
+    href: "/Products",
+    color: "text-sky-500",
+  },
 ];
 
 export default function SideBar() {
   const [isOrdersOpen, setIsOrdersOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   const toggleOrders = () => {
     setIsOrdersOpen(!isOrdersOpen);
   };
@@ -59,6 +77,10 @@ export default function SideBar() {
     { label: "Finished Orders", href: "/dashboard/orders/finished" },
     { label: "Refunded Orders", href: "/dashboard/orders/refund" }, */
   ];
+  if (!mounted) {
+    return null;
+  }
+
   return (
     <div className="space-y-4 py-4 flex flex-col h-full bg-[#111827] text-white ">
       <div className="px-3 py-2 flex-1">
@@ -90,6 +112,7 @@ export default function SideBar() {
               )}
             </div>
           ))}
+          <div>{mounted && <UserButton afterSignOutUrl="/" />}</div>
         </div>
       </div>
     </div>

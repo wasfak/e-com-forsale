@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { FaPlus } from "react-icons/fa";
 
-const AddItemForm = ({ onSubmit }) => {
+const AddItemForm = ({ onSubmit, getCate }) => {
   const [inputValues, setInputValues] = useState([""]);
   const [action, setAction] = useState("add"); // State to track user's choice
 
@@ -22,17 +22,18 @@ const AddItemForm = ({ onSubmit }) => {
     setInputValues(newInputValues);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // Send the input values and action to the parent component
     onSubmit({ inputValues, action });
+
     setInputValues([""]);
   };
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="max-w-xl mx-auto p-4 bg-white rounded-md shadow-md"
+      className="max-w-xl mx-auto p-4 bg-white rounded-md shadow-xl border-2"
     >
       {inputValues.map((value, index) => (
         <div key={index} className="mb-4 flex">
@@ -46,7 +47,7 @@ const AddItemForm = ({ onSubmit }) => {
           {index > 0 && (
             <button
               type="button"
-              className="ml-2 bg-red-500 text-white px-1 text-sm rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600"
+              className="ml-2  bg-red-500 text-white px-1 text-sm rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600"
               onClick={() => handleRemoveInput(index)}
             >
               Remove
