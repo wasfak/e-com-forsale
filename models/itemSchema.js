@@ -15,15 +15,15 @@ const itemSchema = new Schema(
     },
     categories: [
       {
-        type: Schema.Types.ObjectId,
-        ref: "Category",
+        type: String,
+
         default: "",
       },
     ],
     subcategories: [
       {
-        type: Schema.Types.ObjectId,
-        ref: "Subcategory",
+        type: String,
+
         default: "",
       },
     ],

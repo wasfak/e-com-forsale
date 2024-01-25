@@ -8,6 +8,7 @@ const useCartStore = create(
       orders: [],
       adminItems: [],
       selectedProducts: [],
+      categories: [],
 
       // Adds an item or increases its quantity
       addItem: (newItem) =>
@@ -30,6 +31,7 @@ const useCartStore = create(
       getItemById: (itemId) =>
         get().adminItems.find((item) => item._id === itemId) || null,
       setOrders: (newOrders) => set({ orders: newOrders }),
+      setCategories: (newCategories) => set({ categories: newCategories }),
       setAdminItems: (newItems) => set({ adminItems: newItems }),
       // Removes an item from the cart
       removeItem: (itemId) =>
@@ -42,6 +44,7 @@ const useCartStore = create(
       clearOrders: () => set({ orders: [] }),
       clearAdminItems: () => set({ adminItems: [] }),
       clearSelectedItems: () => set({ selectedProducts: [] }),
+      clearCategories: () => set({ categories: [] }),
 
       // Increase the quantity of an item
       increase: (item) =>

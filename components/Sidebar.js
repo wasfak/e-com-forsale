@@ -82,14 +82,14 @@ export default function SideBar() {
   }
 
   return (
-    <div className="space-y-4 py-4 flex flex-col h-full bg-[#111827] text-white ">
+    <div className="space-y-4 py-4 flex flex-col h-full bg-[#518e9b] text-white ">
       <div className="px-3 py-2 flex-1">
         <div className="space-y-1">
           {routes.map((route) => (
             <div key={route.href}>
               <Link
                 href={route.href}
-                className="text-sm group flex p-3 w-full justify-start font-medium cursor-pointer hover:text-white hover:bg-white/10 rounded-lg transition"
+                className="text-sm group flex p-3 w-full justify-start font-medium cursor-pointer hover:text-white hover:bg-white/10 rounded-lg transition "
                 onClick={route.label === "Orders" ? toggleOrders : null}
               >
                 <div className="flex items-center flex-1">

@@ -4,10 +4,12 @@ import AddItemForm from "@/components/AddCategorieForm";
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import CategoriesComponent from "./components/CategoriesComponent";
+import useCartStore from "@/cartStore";
 
 export default function CategoriesPage() {
   const [category, setCategory] = useState(null);
   const [loading, setIsLoading] = useState(false);
+  const { setCategories, clearCategories } = useCartStore();
   useEffect(() => {
     getCate();
   }, []);
@@ -20,6 +22,8 @@ export default function CategoriesPage() {
     const response = await res.json();
 
     setCategory(response.data[0]); // Assuming there is only one object in the array
+    clearCategories();
+    setCategories(response.data[0].name);
     setIsLoading(false);
   };
   const handleAddItem = async ({ inputValues, action }) => {
@@ -33,6 +37,7 @@ export default function CategoriesPage() {
     if (response.status === 200) {
       /*  toast.success(response.message); */
       setCategory(response.data);
+      setCategories(response.data.name);
     } else {
       toast.error("An error occurred"); // Using toast for error messages
       console.error("Error:", response.message);

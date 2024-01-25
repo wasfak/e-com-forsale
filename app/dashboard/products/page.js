@@ -81,9 +81,9 @@ export default function AdminProducts() {
   return (
     <div className="container mx-auto">
       <AdminItemFilter onSelectStatus={filterOrdersByStatus} className="mb-8" />
-      <ProductsActions className="mb-8" />
+      <ProductsActions className="mb-12" />
 
-      <div className="flex items-center justify-evenly gap-2 p-2 mt-8">
+      <div className="flex items-center justify-evenly gap-2 p-2 mt-12">
         {filteredItems.map((item, index) => (
           <AdminItems
             key={item._id}

@@ -52,7 +52,6 @@ export default function AdminItems({ item, selectedStatus }) {
 
   return (
     <>
-
       <div className="relative flex flex-col items-center justify-between w-[300px] h-[320px] gap-y-2 p-4 bg-white rounded-lg shadow-lg overflow-hidden border border-gray-300 hover:shadow-xl transition-shadow duration-300 ease-in-out ">
         <div
           className="mb-2"
@@ -74,6 +73,16 @@ export default function AdminItems({ item, selectedStatus }) {
         <span className="text-md text-gray-500 overflow-ellipsis mb-2 w-full">
           Units sold: {item.soldUnits}
         </span>
+        <div className="text-md text-gray-500 overflow-ellipsis mb-2 w-full flex gap-x-2">
+          {item.categories.map((catego, index) => (
+            <span
+              key={index}
+              className="flex items-center justify-center p-2 rounded-lg bg-[#518e9b] text-black"
+            >
+              {catego}
+            </span>
+          ))}
+        </div>
         <div className="">
           <SettingsIcon
             className="w-6 h-6 text-black mt-2 absolute top-0 right-1 cursor-pointer"

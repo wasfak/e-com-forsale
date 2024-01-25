@@ -3,15 +3,21 @@ import { Button } from "./ui/button";
 import useCartStore from "@/cartStore";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import HandelCategories from "./HandelCategories";
 
 export default function ProductsActions() {
   const [showActions, setShowActions] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showCategories, setShowCategories] = useState(false);
   const router = useRouter();
   const { selectedProducts, clearSelectedItems } = useCartStore();
   useEffect(() => {
     clearSelectedItems();
   }, []);
+
+  const toggleCategories = () => {
+    setShowCategories((prev) => !prev); // Toggle showCategories state
+  };
 
   const toggleActions = () => {
     setShowActions((prev) => !prev);
@@ -60,7 +66,14 @@ export default function ProductsActions() {
       <Button onClick={toggleActions}>Actions</Button>
       {showActions && (
         <div className="flex justify-between items-center w-full ">
-          <Button className="mx-3">Category</Button>
+          <div className="relative mx-3">
+            <Button onClick={toggleCategories}>Category</Button>
+            {showCategories && (
+              <div className="absolute left-0 mt-1">
+                <HandelCategories />
+              </div>
+            )}
+          </div>
           <Button className="mx-3" onClick={handelPublish}>
             Publish
           </Button>
