@@ -19,6 +19,7 @@
     "cloudinary": "^1.41.1",
     "clsx": "^2.1.0",
     "dayjs": "^1.11.10",
+    "framer-motion": "^11.0.3",
     "googleapis": "^130.0.0",
     "lucide-react": "^0.306.0",
     "mongodb": "^6.3.0",

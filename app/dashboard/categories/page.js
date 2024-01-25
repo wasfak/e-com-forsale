@@ -35,7 +35,7 @@ export default function CategoriesPage() {
 
     const response = await res.json();
     if (response.status === 200) {
-      /*  toast.success(response.message); */
+      clearCategories();
       setCategory(response.data);
       setCategories(response.data.name);
     } else {
