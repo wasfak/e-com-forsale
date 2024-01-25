@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import useCartStore from "@/cartStore";
 import { Button } from "./ui/button";
+import toast from "react-hot-toast";
 
 export default function HandelCategories() {
   const { categories, selectedProducts } = useCartStore();
@@ -21,13 +22,11 @@ export default function HandelCategories() {
     setSelectedCategories((prev) => ({ ...prev, [id]: checked }));
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (action) => {
     // Prepare the data to be sent
     const dataToSend = Object.keys(selectedCategories)
       .filter((key) => selectedCategories[key])
       .map((key) => categories[parseInt(key.split("-")[1], 10)]);
-    console.log(dataToSend);
-    console.log(selectedProducts);
 
     // Send data to the database
     // Example: POST request using fetch
@@ -36,15 +35,16 @@ export default function HandelCategories() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ categories: dataToSend, selectedProducts }), // Send as an object
+      body: JSON.stringify({
+        action,
+        categories: dataToSend,
+        selectedProducts,
+      }), // Send as an object
     });
-    if (!response.ok) {
-      console.error("Error saving categories");
-      return;
+    if (response.status == 200) {
+      toast.success("Item Updated");
+      window.location.reload();
     }
-
-    console.log("Categories saved successfully");
-    // Handle further actions upon successful save
   };
 
   return (
@@ -68,14 +68,14 @@ export default function HandelCategories() {
           </div>
         ))}
         <Button
-          onClick={handleSubmit}
+          onClick={() => handleSubmit("add")}
           className="ml-4  text-white rounded text-sm"
           size="sm"
         >
           Add
         </Button>
         <Button
-          onClick={handleSubmit}
+          onClick={() => handleSubmit("remove")}
           className="ml-4  text-white rounded text-sm"
           size="sm"
           variant="destructive"

@@ -6,18 +6,22 @@ import { NextResponse } from "next/server";
 export async function POST(req) {
   const body = await req.json();
   const { userId } = auth();
-  const { categories, selectedProducts } = body; // selectedProducts are assumed to be an array of itemId
+  const { categories, selectedProducts, action } = body; // selectedProducts are assumed to be an array of itemId
 
   try {
     await db.connectDb();
 
-    // Update each product with new categories
     await Promise.all(
       selectedProducts.map(async (itemId) => {
         const item = await ItemModel.findOne({ _id: itemId, userId });
         if (item) {
-          // Assuming categories is an array of ObjectId references to Category
-          item.categories = [...new Set([...item.categories, ...categories])]; // Combines and deduplicates
+          if (action === "add") {
+            item.categories = [...new Set([...item.categories, ...categories])];
+          } else if (action === "remove") {
+            item.categories = item.categories.filter(
+              (cat) => !categories.includes(cat)
+            );
+          }
           await item.save();
         }
       })
