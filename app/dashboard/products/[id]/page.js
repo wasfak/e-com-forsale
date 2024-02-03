@@ -1,6 +1,9 @@
 // ModifyItemPage.js
 "use client";
 
+import useCartStore from "@/cartStore";
+import { Loader } from "@/components/Loader";
+import { Button } from "@/components/ui/button";
 import { CldUploadWidget } from "next-cloudinary";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -46,6 +49,9 @@ function UploadPic({ onImageUpload }) {
 
 export default function ModifyItemPage() {
   const [mounted, setMounted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const { categories } = useCartStore();
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [item, setItem] = useState({
     name: "",
     details: "",
@@ -66,6 +72,7 @@ export default function ModifyItemPage() {
   }, []);
 
   const getItem = async () => {
+    setLoading(true);
     const response = await fetch("/api/getItem", {
       method: "POST",
       body: JSON.stringify(id),
@@ -74,7 +81,31 @@ export default function ModifyItemPage() {
     const res = await response.json();
     if (res.status === 200) {
       setItem(res.data);
+      setLoading(false);
     }
+  };
+
+  const updateItem = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    const data = {
+      ...item,
+      category: selectedCategory, // Add selected category to the data
+    };
+
+    const response = await fetch("/api/updateItem", {
+      method: "POST",
+      body: JSON.stringify({ data, id: item._id }),
+    });
+
+    const res = await response.json();
+    if (res.status === 200) {
+      // Handle success, e.g., show a success message or redirect
+    } else {
+      // Handle error, e.g., display an error message
+    }
+
+    setLoading(false);
   };
 
   const handleImageUpload = (url) => {
@@ -83,58 +114,77 @@ export default function ModifyItemPage() {
       imageUrl: url,
     }));
   };
-
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setItem((prevData) => ({
-      ...prevData,
-      [name]: type === "checkbox" ? checked : value,
-    }));
+
+    if (name === "categories") {
+      setSelectedCategory(value); // Update selected category
+    } else {
+      setItem((prevData) => ({
+        ...prevData,
+        [name]: type === "checkbox" ? checked : value,
+      }));
+    }
   };
   if (!mounted) {
     return "";
   }
+  if (loading) {
+    return <Loader />;
+  }
   return (
-    <div className="p-2 m-2 ">
-      <h1 className="text-3xl font-semibold mb-6">Modify Product</h1>
-      <form className="space-y-4">
-        <div className="flex flex-col mb-4">
-          <label className="text-sm font-medium text-gray-600 mb-1">
-            Name:
-          </label>
-          <input
-            type="text"
-            name="name"
-            value={item.name}
-            onChange={handleChange}
-            placeholder="Product Name"
-            className="p-2 border rounded"
-          />
-        </div>
-        <div className="flex flex-col mb-4">
-          <label className="text-sm font-medium text-gray-600 mb-1">
-            Details:
-          </label>
-          <textarea
-            name="details"
-            value={item.details}
-            onChange={handleChange}
-            placeholder="Product Details"
-            className="p-2 border rounded"
-          />
-        </div>
-        <div className="flex flex-col mb-4">
-          <label className="text-sm font-medium text-gray-600 mb-1">
-            Price:
-          </label>
-          <input
-            type="text"
-            name="price"
-            value={item.price}
-            onChange={handleChange}
-            placeholder="Product Price"
-            className="p-2 border rounded"
-          />
+    <div className="p-2 m-2 h-[100vh]">
+      <h1 className="text-3xl font-semibold mb-2 justify-center text-center">
+        Modify Product
+      </h1>
+      <form className="space-y-2">
+        <div className="mb-4 flex items-center justify-between">
+          <div className="flex flex-col ">
+            <label className="text-sm font-medium text-gray-600 mb-1">
+              Price:
+            </label>
+            <input
+              type="text"
+              name="price"
+              value={item.price}
+              onChange={handleChange}
+              placeholder="Product Price"
+              className="p-2 border rounded"
+            />
+          </div>
+          <div className="flex flex-col mb-2">
+            <label className="text-sm font-medium text-gray-600 mb-1">
+              Name:
+            </label>
+            <input
+              type="text"
+              name="name"
+              value={item.name}
+              onChange={handleChange}
+              placeholder="Product Name"
+              className="p-2 border rounded"
+            />
+          </div>
+          <div className="flex flex-col ">
+            <label className="text-sm font-medium text-gray-600 mb-1">
+              Categories:
+            </label>
+            <select
+              name="categories"
+              value={selectedCategory}
+              onChange={handleChange}
+              className="p-2 border rounded"
+            >
+              <option value="" disabled>
+                Select a category
+              </option>
+              {categories.map((category, index) => (
+                <option key={index} value={category.toString()}>
+                  {category}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
         <div className="flex items-center mb-4">
           <input
@@ -194,22 +244,34 @@ export default function ModifyItemPage() {
             </div>
           </div>
         )}
-        <Image
-          className="object-cover"
-          alt="Uploaded image"
-          src={item.imageUrl}
-          width={200}
-          height={200}
-        />
-        <UploadPic onImageUpload={handleImageUpload} />
+
+        <div className="mb-4 flex items-center justify-between">
+          <div className="flex flex-col mb-4 w-3/4">
+            <label className="text-sm font-medium text-gray-600 mb-1">
+              Details:
+            </label>
+            <textarea
+              name="details"
+              value={item.details}
+              onChange={handleChange}
+              placeholder="Product Details"
+              className="p-2 border rounded"
+            />
+          </div>
+          <div className="w-1/4 flex flex-col items-center justify-center gap-y-2">
+            <Image
+              className="object-cover"
+              alt="Uploaded image"
+              src={item.imageUrl}
+              width={200}
+              height={200}
+            />
+            <UploadPic onImageUpload={handleImageUpload} />
+          </div>
+        </div>
+
         <div>
-          <button
-            type="button"
-            className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
-            onClick={() => console.log("Update functionality here")}
-          >
-            Update Product
-          </button>
+          <Button onClick={updateItem}>Update Product</Button>
         </div>
       </form>
     </div>

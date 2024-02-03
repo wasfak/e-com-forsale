@@ -112,13 +112,13 @@ export default function PlausiPage() {
 
   // JSX for rendering the component
   return (
-    <div className="container mx-auto px-32">
+    <div className="grid grid-cols-2 md:grid-cols-2 gap-4 items-center justify-center h-[100vh] text-sm">
       {/* Display data for the second API call */}
-      <div className="mb-8">
+      <div className="flex items-center justify-center rounded-xl shadow-2xl ">
         {loading2 && <div className="text-gray-700">Loading...</div>}
         {error2 && <div className="text-red-500">Error: {error2.message}</div>}
         {!loading2 && !error2 && (
-          <div className="flex items-center justify-between gap-x-4 my-2">
+          <div className="flex flex-col items-center justify-between gap-x-4 my-2 text-sm">
             <p className="text-lg">
               Unique Visitors: {data2.results.visitors.value}
             </p>
@@ -137,7 +137,7 @@ export default function PlausiPage() {
       </div>
 
       {/* Display data for the third API call */}
-      <div className="mb-8">
+      <div className=" ">
         {loading3 && <div className="text-gray-700">Loading...</div>}
         {error3 && <div className="text-red-500">Error: {error3.message}</div>}
         {!loading3 && !error3 && (
@@ -157,13 +157,18 @@ export default function PlausiPage() {
       </div>
 
       {/* Display data for the first API call */}
-      <div className="mb-8">
+      <div className="">
         {loading1 && <div className="text-gray-700">Loading...</div>}
         {error1 && <div className="text-red-500">Error: {error1.message}</div>}
-        {!loading1 && !error1 && <PlausibleChart data={data1} />}
+        {!loading1 && !error1 && (
+          <div className=" rounded-xl shadow-2xl">
+            <PlausibleChart data={data1} />
+          </div>
+        )}
       </div>
-
-      {data2 && <OrdersAnPage visitors={data2.results.visitors.value} />}
+      <div className="rounded-xl shadow-2xl text-sm">
+        {data2 && <OrdersAnPage visitors={data2.results.visitors.value} />}
+      </div>
     </div>
   );
 }

@@ -19,7 +19,7 @@ const PlausibleChart = ({ data }) => {
             borderColor: "rgba(75, 192, 192, 1)",
             borderWidth: 2,
             pointBackgroundColor: "rgba(75, 192, 192, 1)",
-            pointRadius: 5,
+            pointRadius: 0,
             pointHoverRadius: 7,
           },
         ],

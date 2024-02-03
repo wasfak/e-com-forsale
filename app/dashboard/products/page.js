@@ -79,11 +79,11 @@ export default function AdminProducts() {
   }
 
   return (
-    <div className="container mx-auto">
+    <div className="container mx-auto bg-[#F8F8FF] h-[100vh]">
       <AdminItemFilter onSelectStatus={filterOrdersByStatus} className="mb-8" />
       <ProductsActions className="mb-12" />
 
-      <div className="flex items-center justify-evenly gap-2 p-2 mt-12">
+      <div className="flex items-center justify-evenly gap-2 p-2 mt-14">
         {filteredItems.map((item, index) => (
           <AdminItems
             key={item._id}

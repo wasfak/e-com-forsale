@@ -27,6 +27,9 @@ const ZZOrdersList = ({ selectedStatus }) => {
     }
   });
 
+  if (!orders) {
+    return <h1>no orders!!!</h1>;
+  }
   return (
     <div className="grid grid-cols-2 gap-4 p-2">
       {orders.map((order) => (

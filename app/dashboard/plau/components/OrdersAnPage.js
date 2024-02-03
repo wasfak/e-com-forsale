@@ -32,7 +32,7 @@ export default function OrdersAnPage({ visitors }) {
   };
 
   return (
-    <div className="container mx-auto my-8 p-6 bg-white shadow-md rounded-lg">
+    <div className="p-6 bg-white shadow-md rounded-lg">
       <div className="grid grid-cols-2 gap-8">
         <div>
           <p className="text-lg my-2">Total Sales: ${totalSales.toFixed(2)}</p>
@@ -48,7 +48,7 @@ export default function OrdersAnPage({ visitors }) {
               {topSellingProducts
                 .filter((product) => product.soldUnits > 0)
                 .map((product) => (
-                  <li key={product._id} className="text-lg mb-2">
+                  <li key={product._id} className="text-sm mb-2">
                     {product.name} - Sold Units: {product.soldUnits}
                   </li>
                 ))}

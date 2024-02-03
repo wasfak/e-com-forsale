@@ -10,7 +10,7 @@ export async function POST(req) {
   try {
     await db.connectDb();
     const item = await ItemModel.findOne({ _id: id });
-    console.log(item);
+
     return NextResponse.json({ status: 200, data: item });
   } catch (error) {
     console.log(error);

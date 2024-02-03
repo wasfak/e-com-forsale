@@ -48,7 +48,7 @@ export default function HandelCategories() {
   };
 
   return (
-    <div className="flex flex-col w-full p-2 shadow-2xl rounded-xl bg-black text-white">
+    <div className="flex flex-col w-full p-2 shadow-2xl rounded-xl bg-[#303179] text-white mb-4">
       <div className="flex flex-row flex-nowrap overflow-x-auto">
         {categories.map((category, index) => (
           <div key={index} className="flex items-center mr-4 flex-nowrap">

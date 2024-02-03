@@ -17,49 +17,49 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 const montserrat = Montserrat({ weight: "600", subsets: ["latin"] });
-
+const routesColor = `text-white`;
 const routes = [
   {
     label: "Dashboard",
     icon: RiDashboard3Fill,
     href: "/dashboard",
-    color: "text-sky-500",
+    color: routesColor,
   },
   {
     label: "Orders",
     icon: ShoppingCartIcon,
     href: "/dashboard/orders",
-    color: "text-sky-500",
+    color: routesColor,
   },
   {
     label: "Products",
     icon: ShoppingBagIcon,
     href: "/dashboard/products",
-    color: "text-sky-500",
+    color: routesColor,
   },
   {
     label: "Analytics",
     icon: TagIcon,
-    href: "/dashboard/analytics",
-    color: "text-sky-500",
+    href: "/dashboard/plau",
+    color: routesColor,
   },
   {
     label: "Categories",
     icon: LayoutDashboard,
     href: "/dashboard/categories",
-    color: "text-sky-500",
+    color: routesColor,
   },
   {
     label: "Home",
     icon: IoHomeSharp,
     href: "/",
-    color: "text-sky-500",
+    color: routesColor,
   },
   {
     label: "View Products",
     icon: MdViewCompactAlt,
     href: "/Products",
-    color: "text-sky-500",
+    color: routesColor,
   },
 ];
 
@@ -82,14 +82,14 @@ export default function SideBar() {
   }
 
   return (
-    <div className="space-y-4 py-4 flex flex-col h-full bg-[#518e9b] text-white ">
+    <div className="relative space-y-4 py-4 flex flex-col h-full bg-[#ed7966] text-white">
       <div className="px-3 py-2 flex-1">
         <div className="space-y-1">
           {routes.map((route) => (
             <div key={route.href}>
               <Link
                 href={route.href}
-                className="text-sm group flex p-3 w-full justify-start font-medium cursor-pointer hover:text-white hover:bg-white/10 rounded-lg transition "
+                className="text-sm group flex p-3 w-full justify-start font-medium cursor-pointer hover:text-black hover:bg-white/10 rounded-lg transition "
                 onClick={route.label === "Orders" ? toggleOrders : null}
               >
                 <div className="flex items-center flex-1">
@@ -112,7 +112,11 @@ export default function SideBar() {
               )}
             </div>
           ))}
-          <div>{mounted && <UserButton afterSignOutUrl="/" />}</div>
+          <div className="absolute bottom-2 left-3">
+            {mounted && (
+              <UserButton afterSignOutUrl="/" className="bg-[#ed7966]" />
+            )}
+          </div>
         </div>
       </div>
     </div>

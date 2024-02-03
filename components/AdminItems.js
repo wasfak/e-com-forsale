@@ -4,6 +4,7 @@ import useCartStore from "@/cartStore";
 
 import { SettingsIcon } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 const formatDate = (timestamp) => {
   const date = new Date(timestamp);
@@ -18,12 +19,30 @@ export default function AdminItems({ item, selectedStatus }) {
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const selectedProducts = useCartStore((state) => state.selectedProducts);
+  const router = useRouter();
 
   const toggleDropdown = () => {
     setDropdownVisible(!dropdownVisible);
   };
 
-  const handleMenuItemClick = (action) => {
+  const handleMenuItemClick = async (action) => {
+    if (action === "share" && navigator.share) {
+      try {
+        await navigator.share({
+          title: "Your Item Title",
+          text: "Check out this amazing item!",
+          url: window.location.href,
+        });
+        console.log("Shared successfully");
+      } catch (error) {
+        console.error("Error sharing:", error);
+      }
+    } else {
+      // Fallback for browsers that do not support the Web Share API
+      console.log("Web Share API not supported");
+      // Implement your custom share logic here for unsupported browsers (e.g., open a modal with share options)
+    }
+
     // Perform actions based on the clicked menu item
     console.log(`Clicked on ${action}`);
     // Close the dropdown after clicking on an item
@@ -77,7 +96,7 @@ export default function AdminItems({ item, selectedStatus }) {
           {item.categories.map((catego, index) => (
             <span
               key={index}
-              className="flex items-center justify-center p-2 rounded-lg bg-[#518e9b] text-black"
+              className="flex items-center justify-center p-2 rounded-lg bg-[#303179] text-white"
             >
               {catego}
             </span>
@@ -100,7 +119,11 @@ export default function AdminItems({ item, selectedStatus }) {
             <div className=" bg-white border border-gray-300 rounded-md shadow-md absolute top-6 right-3 cursor-pointer flex flex-col items-center justify-evenly  h-auto">
               <ul className="list-none p-2">
                 <li>
-                  <button onClick={() => handleMenuItemClick("edit")}>
+                  <button
+                    onClick={() =>
+                      router.push(`/dashboard/products/${item._id}`)
+                    }
+                  >
                     <p className="text-sm text-gray-500 overflow-ellipsis mb-2">
                       Edit
                     </p>
