@@ -92,6 +92,7 @@ export default function AdminItems({ item, selectedStatus }) {
         <span className="text-md text-gray-500 overflow-ellipsis mb-2 w-full">
           Units sold: {item.soldUnits}
         </span>
+
         <div className="text-md text-gray-500 overflow-ellipsis mb-2 w-full flex gap-x-2">
           {item.categories.map((catego, index) => (
             <span
@@ -102,6 +103,9 @@ export default function AdminItems({ item, selectedStatus }) {
             </span>
           ))}
         </div>
+        <span className="text-md text-gray-500 overflow-ellipsis mb-2 w-full">
+          Status: {item.published}
+        </span>
         <div className="">
           <SettingsIcon
             className="w-6 h-6 text-black mt-2 absolute top-0 right-1 cursor-pointer"
@@ -130,7 +134,11 @@ export default function AdminItems({ item, selectedStatus }) {
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => handleMenuItemClick("view")}>
+                  <button
+                    onClick={() =>
+                      router.push(`/dashboard/products/product/${item._id}`)
+                    }
+                  >
                     <p className="text-sm text-gray-500 overflow-ellipsis mb-2">
                       View
                     </p>

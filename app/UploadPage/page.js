@@ -4,6 +4,7 @@ import { CldUploadWidget } from "next-cloudinary";
 import Image from "next/image";
 import toast from "react-hot-toast";
 import { z } from "zod";
+import { useRouter } from "next/navigation";
 
 function UploadPic({ onImageUpload }) {
   const [url, setUrl] = useState("");
@@ -45,6 +46,7 @@ function UploadPic({ onImageUpload }) {
 
 export default function UploadPage() {
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
   const [productData, setProductData] = useState({
     name: "",
     details: "",
@@ -168,6 +170,7 @@ export default function UploadPage() {
 
       if (data.status === 200) {
         toast.success("Product added successfully");
+        router.push("/dashboard/products");
       } else {
         toast.error("Failed to add product");
       }

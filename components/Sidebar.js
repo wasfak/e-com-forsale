@@ -82,7 +82,7 @@ export default function SideBar() {
   }
 
   return (
-    <div className="relative space-y-4 py-4 flex flex-col h-full bg-[#ed7966] text-white">
+    <div className="relative space-y-4 py-4 flex flex-col bg-[#ed7966] text-white h-[100vh]">
       <div className="px-3 py-2 flex-1">
         <div className="space-y-1">
           {routes.map((route) => (
