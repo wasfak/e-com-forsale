@@ -15,9 +15,9 @@ const formatDate = (timestamp) => {
   });
 };
 
-export default function AdminItems({ item, selectedStatus }) {
+export default function AdminItems({ item, setFilteredItems }) {
   const [dropdownVisible, setDropdownVisible] = useState(false);
-  const [isChecked, setIsChecked] = useState(false);
+  const [isChecked, setIsChecked] = useState(item.isChecked || false);
   const selectedProducts = useCartStore((state) => state.selectedProducts);
   const router = useRouter();
 
@@ -48,25 +48,27 @@ export default function AdminItems({ item, selectedStatus }) {
     // Close the dropdown after clicking on an item
     setDropdownVisible(false);
   };
+
   const handleCheckboxChange = () => {
-    setIsChecked(!isChecked);
+    setIsChecked((prevChecked) => !prevChecked);
 
-    // Save or use the product ID in your state management system
     const productId = item._id;
-
-    if (!isChecked) {
-      // Product is checked, add the product ID to the selectedProducts array
-      useCartStore.setState((state) => ({
-        selectedProducts: [...state.selectedProducts, productId],
-      }));
-    } else {
-      // Product is unchecked, remove the product ID from the selectedProducts array
-      useCartStore.setState((state) => ({
-        selectedProducts: state.selectedProducts.filter(
+    const updatedSelectedProducts = isChecked
+      ? selectedProducts.filter(
           (selectedProductId) => selectedProductId !== productId
-        ),
-      }));
-    }
+        )
+      : [...selectedProducts, productId];
+
+    useCartStore.setState({ selectedProducts: updatedSelectedProducts });
+
+    // Update isChecked state for the current item
+    setFilteredItems((prevItems) =>
+      prevItems.map((prevItem) =>
+        prevItem._id === item._id
+          ? { ...prevItem, isChecked: !prevItem.isChecked }
+          : prevItem
+      )
+    );
   };
 
   return (
@@ -116,9 +118,10 @@ export default function AdminItems({ item, selectedStatus }) {
             name="check"
             id="check"
             className="w-4 h-4 absolute top-2 left-1"
-            checked={isChecked}
+            checked={selectedProducts.includes(item._id)}
             onChange={handleCheckboxChange}
           />
+
           {dropdownVisible && (
             <div className=" bg-white border border-gray-300 rounded-md shadow-md absolute top-6 right-3 cursor-pointer flex flex-col items-center justify-evenly  h-auto">
               <ul className="list-none p-2">

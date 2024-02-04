@@ -38,7 +38,6 @@ export default function ProductPage() {
     if (res.status === 200) {
       setItem(res.data);
       setLoading(false);
-      console.log(res.data);
     }
   };
   if (!mounted) {

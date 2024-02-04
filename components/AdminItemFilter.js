@@ -25,13 +25,13 @@ export default function AdminItemFilter({ onSelectStatus }) {
         className={isSelected("published") ? "" : "bg-[#303179]"}
         onClick={() => handleSelectStatus("published")}
       >
-        <span className="">Published</span>
+        <span className="">Show Published</span>
       </Button>
       <Button
         className={isSelected("unpublished") ? "" : "bg-[#303179]"}
         onClick={() => handleSelectStatus("unpublished")}
       >
-        <span className="">UnPublished</span>
+        <span className="">Show Unpublished</span>
       </Button>
       <div className="absolute top-4 -right-80 flex items-center justify-between w-[180px] bg-[#ed7966] p-3 shadow-2xl">
         <FaPlus />

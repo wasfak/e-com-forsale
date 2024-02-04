@@ -67,7 +67,7 @@ export default function ProductsActions() {
       {showActions && (
         <div className="flex justify-between items-center w-full ">
           <div className="relative mx-3">
-            <Button onClick={toggleCategories}>Category</Button>
+            <Button onClick={toggleCategories}>Modify Category</Button>
             {showCategories && (
               <div className="absolute left-0 mt-1">
                 <HandelCategories />

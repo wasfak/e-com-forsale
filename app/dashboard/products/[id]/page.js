@@ -6,7 +6,7 @@ import { Loader } from "@/components/Loader";
 import { Button } from "@/components/ui/button";
 import { CldUploadWidget } from "next-cloudinary";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 function UploadPic({ onImageUpload }) {
@@ -50,6 +50,7 @@ function UploadPic({ onImageUpload }) {
 export default function ModifyItemPage() {
   const [mounted, setMounted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
   const { categories } = useCartStore();
   const [selectedCategory, setSelectedCategory] = useState("");
   const [item, setItem] = useState({
@@ -100,7 +101,7 @@ export default function ModifyItemPage() {
 
     const res = await response.json();
     if (res.status === 200) {
-      // Handle success, e.g., show a success message or redirect
+      router.push("/dashboard/products");
     } else {
       // Handle error, e.g., display an error message
     }
@@ -134,13 +135,13 @@ export default function ModifyItemPage() {
   }
   return (
     <div className="p-2 m-2 h-[100vh]">
-      <h1 className="text-3xl font-semibold mb-2 justify-center text-center">
+      <h1 className="text-3xl font-bold mb-2 justify-center text-center">
         Modify Product
       </h1>
       <form className="space-y-2">
         <div className="mb-4 flex items-center justify-between">
           <div className="flex flex-col ">
-            <label className="text-sm font-medium text-gray-600 mb-1">
+            <label className="text-sm font-bold text-gray-600 mb-1">
               Price:
             </label>
             <input
@@ -153,7 +154,7 @@ export default function ModifyItemPage() {
             />
           </div>
           <div className="flex flex-col mb-2">
-            <label className="text-sm font-medium text-gray-600 mb-1">
+            <label className="text-sm font-bold text-gray-600 mb-1">
               Name:
             </label>
             <input
@@ -166,24 +167,16 @@ export default function ModifyItemPage() {
             />
           </div>
           <div className="flex flex-col ">
-            <label className="text-sm font-medium text-gray-600 mb-1">
-              Categories:
+            <label className="text-sm font-bold text-gray-600 mb-1">
+              Categories
             </label>
-            <select
-              name="categories"
-              value={selectedCategory}
-              onChange={handleChange}
-              className="p-2 border rounded"
-            >
-              <option value="" disabled>
-                Select a category
-              </option>
+            <div className="flex flex-col gap-y-2 items-left justify-center text-left">
               {categories.map((category, index) => (
-                <option key={index} value={category.toString()}>
+                <span key={index} value={category.toString()}>
                   {category}
-                </option>
+                </span>
               ))}
-            </select>
+            </div>
           </div>
         </div>
         <div className="flex items-center mb-4">
@@ -194,7 +187,7 @@ export default function ModifyItemPage() {
             onChange={handleChange}
             className="mr-2"
           />
-          <label className="text-sm font-medium text-gray-600">On Sale:</label>
+          <label className="text-sm font-bold text-gray-600">On Sale:</label>
         </div>
         {item.isOnSale && (
           <div className="mb-4 ml-6">
@@ -207,7 +200,7 @@ export default function ModifyItemPage() {
                 onChange={handleChange}
                 className="mr-1"
               />
-              <label className="text-sm font-medium text-gray-600 mr-2">
+              <label className="text-sm font-bold text-gray-600 mr-2">
                 Percentage:
               </label>
               <input
@@ -247,7 +240,7 @@ export default function ModifyItemPage() {
 
         <div className="mb-4 flex items-center justify-between">
           <div className="flex flex-col mb-4 w-3/4">
-            <label className="text-sm font-medium text-gray-600 mb-1">
+            <label className="text-sm font-bold text-gray-600 mb-1">
               Details:
             </label>
             <textarea

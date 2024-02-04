@@ -16,6 +16,7 @@ export default function AdminProducts() {
   const selectedProducts = useCartStore((state) => state.selectedProducts);
   const [allItems, setAllItems] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
+  const [allItemsChecked, setAllItemsChecked] = useState(false);
 
   const { clearAdminItems, setAdminItems } = useCartStore();
 
@@ -71,6 +72,42 @@ export default function AdminProducts() {
     setAdminItems(filtered);
   };
 
+  const handleSelectAll = () => {
+    const allProductIds = allItems.map((item) => item._id);
+
+    // Update selectedProducts state
+    useCartStore.setState({ selectedProducts: allProductIds });
+
+    // Update isChecked state for each item
+    setFilteredItems((prevItems) =>
+      prevItems.map((item) => ({ ...item, isChecked: true }))
+    );
+
+    // Update the state to indicate all items are checked
+    setAllItemsChecked(true);
+  };
+
+  const handleUncheckAll = () => {
+    // Clear selectedProducts state
+    useCartStore.setState({ selectedProducts: [] });
+
+    // Update isChecked state for each item
+    setFilteredItems((prevItems) =>
+      prevItems.map((item) => ({ ...item, isChecked: false }))
+    );
+
+    // Update the state to indicate none of the items are checked
+    setAllItemsChecked(false);
+  };
+
+  const handleToggleAll = () => {
+    if (allItemsChecked) {
+      handleUncheckAll();
+    } else {
+      handleSelectAll();
+    }
+  };
+
   if (!mounted) {
     return "";
   }
@@ -82,13 +119,16 @@ export default function AdminProducts() {
     <div className="container mx-auto bg-[#F8F8FF] h-[100vh]">
       <AdminItemFilter onSelectStatus={filterOrdersByStatus} className="mb-8" />
       <ProductsActions className="mb-12" />
-
+      <Button onClick={handleToggleAll} className="mt-4">
+        {allItemsChecked ? "Uncheck All" : "Select All"}
+      </Button>
       <div className="flex flex-wrap items-center justify-evenly gap-2 p-2 mt-14">
         {filteredItems.map((item, index) => (
           <AdminItems
             key={item._id}
             item={item}
             selectedStatus={selectedStatus}
+            setFilteredItems={setFilteredItems}
           />
         ))}
       </div>
