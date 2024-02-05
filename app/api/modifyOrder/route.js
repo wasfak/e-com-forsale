@@ -35,7 +35,7 @@ export async function POST(req) {
         // Find the item and update its soldUnits
         await ItemModel.findOneAndUpdate(
           { _id: itemId },
-          { $inc: { soldUnits: quantity } }
+          { $inc: { soldUnits: quantity, stock: -quantity } }
         );
       }
     }

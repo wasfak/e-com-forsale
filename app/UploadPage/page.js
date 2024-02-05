@@ -56,6 +56,7 @@ export default function UploadPage() {
     discountType: "",
     discountPercentage: "",
     discountAmount: "",
+    stock: "",
   });
 
   const productSchema = z
@@ -70,6 +71,7 @@ export default function UploadPage() {
         .max(500, "Details are too long. Maximum 500 characters."),
       price: z.string().min(0, "Price must be a positive number."),
       isOnSale: z.boolean(),
+      stock: z.string(),
       imageUrl: z
         .string()
         .url("Please provide a valid image URL.")
@@ -186,6 +188,7 @@ export default function UploadPage() {
         discountType: "",
         discountPercentage: null,
         discountAmount: null,
+        stock: "",
       });
       setLoading(false);
     }
@@ -205,6 +208,19 @@ export default function UploadPage() {
             value={productData.name}
             onChange={handleChange}
             placeholder="Product Name"
+            className="p-2 border rounded"
+          />
+        </div>
+        <div className="flex flex-col mb-4">
+          <label className="text-sm font-medium text-gray-600 mb-1">
+            Stock:
+          </label>
+          <input
+            type="text"
+            name="stock"
+            value={productData.stock}
+            onChange={handleChange}
+            placeholder="stock"
             className="p-2 border rounded"
           />
         </div>

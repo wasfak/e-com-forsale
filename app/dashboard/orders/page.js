@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
 export default function AdminOrders() {
   const [mounted, setMounted] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState(null);
-  const { clearOrders, setAdminItems } = useCartStore();
+
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {

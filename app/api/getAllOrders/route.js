@@ -10,7 +10,7 @@ export const GET = async (req) => {
   try {
     await db.connectDb();
 
-    const data = await OrderModel.find({ userId });
+    const data = await OrderModel.find({ userId }).sort({ createdAt: -1 });
 
     return NextResponse.json({ status: 200, data });
   } catch (error) {

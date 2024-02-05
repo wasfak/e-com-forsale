@@ -106,6 +106,9 @@ export default function AdminItems({ item, setFilteredItems }) {
           ))}
         </div>
         <span className="text-md text-gray-500 overflow-ellipsis mb-2 w-full">
+          Stock: {item.stock}
+        </span>
+        <span className="text-md text-gray-500 overflow-ellipsis mb-2 w-full">
           Status: {item.published}
         </span>
         <div className="">

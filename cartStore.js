@@ -6,6 +6,7 @@ const useCartStore = create(
     (set, get) => ({
       items: [],
       orders: [],
+
       adminItems: [],
       selectedProducts: [],
       categories: [],
@@ -33,6 +34,7 @@ const useCartStore = create(
       setOrders: (newOrders) => set({ orders: newOrders }),
       setCategories: (newCategories) => set({ categories: newCategories }),
       setAdminItems: (newItems) => set({ adminItems: newItems }),
+
       // Removes an item from the cart
       removeItem: (itemId) =>
         set((state) => ({

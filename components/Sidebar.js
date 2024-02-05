@@ -12,9 +12,11 @@ import { RiDashboard3Fill } from "react-icons/ri";
 import { Montserrat } from "next/font/google";
 import { IoHomeSharp } from "react-icons/io5";
 import { MdViewCompactAlt } from "react-icons/md";
+import { IoStorefrontSharp } from "react-icons/io5";
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import LowItems from "./LowItems";
 
 const montserrat = Montserrat({ weight: "600", subsets: ["latin"] });
 const routesColor = `text-white`;
@@ -61,6 +63,12 @@ const routes = [
     href: "/Products",
     color: routesColor,
   },
+  {
+    label: "Store Management",
+    icon: IoStorefrontSharp,
+    href: "/dashboard/Store",
+    color: routesColor,
+  },
 ];
 
 export default function SideBar() {
@@ -86,7 +94,7 @@ export default function SideBar() {
       <div className="px-3 py-2 flex-1">
         <div className="space-y-1">
           {routes.map((route) => (
-            <div key={route.href}>
+            <div key={route.href} className="relative">
               <Link
                 href={route.href}
                 className="text-sm group flex p-3 w-full justify-start font-medium cursor-pointer hover:text-black hover:bg-white/10 rounded-lg transition "
@@ -97,6 +105,11 @@ export default function SideBar() {
                   {route.label}
                 </div>
               </Link>
+              {route.label === "Store Management" && (
+                <div className="absolute top-0">
+                  <LowItems />
+                </div>
+              )}
               {route.label === "Orders" && isOrdersOpen && (
                 <div className="pl-8 space-y-1">
                   {orderSubRoutes.map((subRoute) => (

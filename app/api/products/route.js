@@ -16,6 +16,7 @@ export const POST = async (req) => {
     discountType,
     discountPercentage,
     discountAmount,
+    stock,
   } = body;
 
   try {
@@ -34,6 +35,7 @@ export const POST = async (req) => {
       discountPercentage,
       discountAmount,
       userId,
+      stock,
     });
 
     // Save the item to the database
